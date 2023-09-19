@@ -18,7 +18,11 @@ const {ModuleResolutionKind} = require('typescript');
 /*::
 export type BuildOptions = $ReadOnly<{
   // The target runtime to compile for.
-  target: 'node',
+  target:
+    | 'node'
+    // Special case for @react-native/assets-registry, where this is consumed
+    // both by Node.js build tooling and React Native at runtime.
+    | 'node-like',
 
   // Whether to emit Flow definition files (.js.flow) (default: true).
   emitFlowDefs?: boolean,
@@ -82,6 +86,7 @@ function getBabelConfig(
 
   switch (target) {
     case 'node':
+    case 'node-like':
       return require('./babel/node.config.js');
   }
 }
@@ -93,6 +98,7 @@ function getTypeScriptCompilerOptions(
 
   switch (target) {
     case 'node':
+    case 'node-like':
       return {
         ...require('@tsconfig/node18/tsconfig.json').compilerOptions,
         moduleResolution: ModuleResolutionKind.NodeJs,
