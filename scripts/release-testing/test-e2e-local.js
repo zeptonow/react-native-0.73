@@ -56,7 +56,7 @@ const argv = yargs
     default: true,
   })
   .option('c', {
-    alias: 'circleciToken',
+    alias: 'ciToken',
     type: 'string',
   })
   .option('useLastSuccessfulPipeline', {
@@ -338,7 +338,7 @@ async function main() {
 
   let circleCIArtifacts = await setupCircleCIArtifacts(
     // $FlowIgnoreError[prop-missing]
-    argv.circleciToken,
+    argv.ciToken,
     branchName,
     // $FlowIgnoreError[prop-missing]
     argv.useLastSuccessfulPipeline,

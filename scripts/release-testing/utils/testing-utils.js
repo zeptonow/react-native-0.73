@@ -20,6 +20,7 @@ const {
   generateiOSArtifacts,
 } = require('../../releases/utils/release-utils');
 const circleCIArtifactsUtils = require('./circle-ci-artifacts-utils.js');
+const ghaArtifactsUtils = require('./github-actions-utils.js');
 const fs = require('fs');
 // $FlowIgnore[cannot-resolve-module]
 const {spawn} = require('node:child_process');
@@ -175,6 +176,32 @@ async function setupCircleCIArtifacts(
     useLastSuccessfulPipeline,
   );
   return circleCIArtifactsUtils;
+}
+
+/**
+ * Setups the CircleCIArtifacts if a token has been passed
+ *
+ * Parameters:
+ * - @circleciToken a valid CircleCI Token.
+ * - @branchName the branch of the name we want to use to fetch the artifacts.
+ */
+async function setupGHAArtifacts(
+  ciToken /*: ?string */,
+  branchName /*: string */,
+  useLastSuccessfulPipeline /*: boolean */,
+) /*: Promise<?typeof ghaArtifactsUtils> */ {
+  if (ciToken == null) {
+    return null;
+  }
+
+  const baseTmpPath = '/tmp/react-native-tmp';
+  await ghaArtifactsUtils.initialize(
+    ciToken,
+    baseTmpPath,
+    branchName,
+    useLastSuccessfulPipeline,
+  );
+  return ghaArtifactsUtils;
 }
 
 async function downloadArtifactsFromCircleCI(
